@@ -19,6 +19,10 @@ public interface MemberController {
     public String updateProfile(@RequestBody String request, @RequestHeader HttpHeaders headers);
 
 
+    @RequestMapping(path = "/profile" , method = RequestMethod.POST)
+    public String profile(@RequestBody String request, @RequestHeader HttpHeaders headers);
+
+
 
 
 

@@ -133,7 +133,7 @@ public class MemberControllerImpl implements MemberController {
             }
 
             if (sessionFromHeader == null || sessionFromHeader.isEmpty()) {
-                return jsonResponse.build("CP-04");
+                return jsonResponse.build("CP-05");
             }
 
             if (!sessionFromHeader.equals(sessionFromcche)) {
@@ -146,6 +146,40 @@ public class MemberControllerImpl implements MemberController {
             check.setDob(c.getDob());
             memberService.update(check);
             return jsonResponse.build("RC-00");
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return jsonResponse.build("RC-99");
+        }
+    }
+
+
+
+    public String profile(String request , HttpHeaders header) {
+        logger.info("incoming reuqest  Profile : " + request);
+        logger.info("incoming reuqest  Profile  : " + header);
+        String sessionFromHeader = header.get("sessionId").toString();
+        logger.info("sessionFromHeader : " + sessionFromHeader);
+        try {
+            Gson gson = new Gson();
+            Member c = gson.fromJson( request , Member.class );
+            String sessionFromcche  = sessionConcurrentHashMap.getSession(c.getPhone()+ c.getDeviceId().toString());
+            logger.info("Check session : " + sessionFromcche);
+
+            Member check = memberService.getCustomerByPhone(c.getPhone());
+            if (check == null) {
+                return jsonResponse.build("CP-01");
+            }
+
+            if (sessionFromHeader == null || sessionFromHeader.isEmpty()) {
+                return jsonResponse.build("CP-04");
+            }
+
+            if (!sessionFromHeader.equals(sessionFromcche)) {
+                return jsonResponse.build("CP-04");
+            }
+
+           return gson.toJson(check);
 
         }catch (Exception e){
             e.printStackTrace();
