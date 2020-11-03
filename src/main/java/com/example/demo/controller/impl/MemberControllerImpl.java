@@ -118,7 +118,7 @@ public class MemberControllerImpl implements MemberController {
         logger.info("incoming reuqest update Profile : " + request);
         logger.info("incoming reuqest update Profile  : " + header);
         logger.info("incoming request register : " + header.get("sessionId"));
-        String sessionFromHeader = header.get("sessionId").toString();
+        String sessionFromHeader = header.get("sessionId").get(0).toString();
         logger.info("sessionFromHeader : " + sessionFromHeader);
 
         try {
