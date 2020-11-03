@@ -18,6 +18,8 @@ public class Chat implements Serializable {
     Date updated;
 
 
+    
+
 
     public long getId() {
         return id;
