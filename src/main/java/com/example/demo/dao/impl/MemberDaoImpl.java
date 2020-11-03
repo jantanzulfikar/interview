@@ -63,7 +63,7 @@ public class MemberDaoImpl extends JdbcDaoSupport implements MemberDao{
                 " email = ?  , created  = ?, updated = ?, createdby = ? , lastlogin =? , password = ? , device_id = ? where id = ?";
         getJdbcTemplate().update(sql, new Object[]{
                 mem.getFirstName() , mem.getLastName() , mem.getGender() , mem.getDob() , mem.getPhone() , mem.getEmail() , mem.getCreated() , mem.getUpdated() , mem.getCreatedby(),
-                mem.getLastLogin() , mem.getPassword() , mem.getId() , mem.getDeviceId()
+                mem.getLastLogin() , mem.getPassword() , mem.getDeviceId() ,  mem.getId()  
         });
 
 
