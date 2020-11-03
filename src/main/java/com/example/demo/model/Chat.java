@@ -20,10 +20,6 @@ public class Chat implements Serializable {
 
 
 
-
-
-    
-
     public long getId() {
         return id;
     }

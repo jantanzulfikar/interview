@@ -5,18 +5,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/user")
-public interface CustomerController {
+@RequestMapping(path = "/member")
+public interface MemberController {
 
 
     @RequestMapping(path = "/registration" , method = RequestMethod.POST)
-    public String registration(@RequestBody String request , @RequestHeader HttpHeaders headers);
+    public String registration(@RequestBody String request, @RequestHeader HttpHeaders headers);
 
     @RequestMapping(path = "/login" , method = RequestMethod.POST)
-    public String login(@RequestBody String request , @RequestHeader HttpHeaders headers);
+    public String login(@RequestBody String request, @RequestHeader HttpHeaders headers);
 
     @RequestMapping(path = "/updateProfile" , method = RequestMethod.POST)
-    public String updateProfile(@RequestBody String request , @RequestHeader HttpHeaders headers);
+    public String updateProfile(@RequestBody String request, @RequestHeader HttpHeaders headers);
 
 
 

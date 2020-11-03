@@ -1,29 +1,29 @@
 package com.example.demo.controller.impl;
 
-import com.example.demo.model.Customer;
 import com.example.demo.controller.CustomerController;
+import com.example.demo.controller.MemberController;
+import com.example.demo.model.Customer;
+import com.example.demo.model.Member;
 import com.example.demo.service.CustomerService;
-import com.example.demo.util.JsonResponse;
-import com.example.demo.util.SendMail;
-import com.example.demo.util.WeakConcurrentHashMap;
+import com.example.demo.service.MemberService;
+import com.example.demo.util.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.logging.Logger;
-import com.example.demo.util.generateMD5;
-import org.apache.commons.lang3.*;
 
 
 @RestController
-public class CustomerControllerImpl implements CustomerController {
+public class MemberControllerImpl implements MemberController {
 
-    Logger logger = Logger.getLogger(CustomerControllerImpl.class.getName());
+    Logger logger = Logger.getLogger(MemberControllerImpl.class.getName());
 
     @Autowired
-    private CustomerService customerService;
+    private MemberService memberService;
 
     @Autowired
     private JsonResponse jsonResponse;
@@ -34,34 +34,35 @@ public class CustomerControllerImpl implements CustomerController {
     @Autowired
     private WeakConcurrentHashMap weakConcurrentHashMap;
 
+    @Autowired
+    private SessionConcurrentHashMap sessionConcurrentHashMap;
+
     @Override
     public String registration(String request , HttpHeaders header){
         try {
             logger.info("incoming request register : " + request);
-            logger.info("incoming request register : " + header.get("ads"));
-
             Gson gson = new Gson();
-            Customer c = gson.fromJson( request , Customer.class );
-            logger.info("name : " + c.getCustomerName());
-            logger.info("phone : " + c.getCustomerPhone());
-            if ( c.getCustomerName() == null || c.getCustomerPhone() == null) {
+            Member c = gson.fromJson( request , Member.class );
+            logger.info("name : " + c.getFirstName());
+            logger.info("phone : " + c.getPhone());
+            if ( c.getFirstName() == null || c.getPhone() == null) {
                 return jsonResponse.build("RC-99");
             }
 
-            Customer checkCust = customerService.getCustomerByPhone(c.getCustomerPhone());
+            Member checkCust = memberService.getCustomerByPhone(c.getPhone());
             logger.info("Count Data : " + checkCust);
             if (checkCust != null) {
                 return jsonResponse.build("RC-01");
             }
 
-            int checkUserName = customerService.getCountCustomerByUserName(c.getUsername());
-            if (checkUserName > 1 ) {
+            int checkEmail = memberService.checkCountEmail(c.getEmail());
+            if (checkEmail > 1 ) {
                 return jsonResponse.build("RC-02");
             }
 
             String hashPassword = generateMD5.getMd5(c.getPassword());
             c.setPassword(hashPassword);
-            customerService.save(c);
+            memberService.save(c);
             return jsonResponse.build("RC-00");
 
         }catch (Exception e) {
@@ -75,16 +76,15 @@ public class CustomerControllerImpl implements CustomerController {
     public String login(String request , HttpHeaders header) {
         logger.info("incoming reuqest login : " + request);
         logger.info("incoming reuqest header login : " + header);
-        logger.info("SATIAMA SENSEI");
         try {
             Gson gson = new Gson();
-            Customer c = gson.fromJson( request , Customer.class );
-            if (c.getUsername() == null || c.getPassword() == null) {
+            Member c = gson.fromJson( request , Member.class );
+            if (c.getFirstName() == null || c.getPassword() == null) {
                 return jsonResponse.build("LG-02");
             }
 
             String hashPass = generateMD5.getMd5(c.getPassword());
-            Customer checkLogin = customerService.getLogin(c.getUsername());
+            Member checkLogin = memberService.getLogin(c.getPhone());
             if (checkLogin == null){
                return jsonResponse.build("LG-03");
             }
@@ -93,6 +93,9 @@ public class CustomerControllerImpl implements CustomerController {
                 return jsonResponse.build("LG-03");
             }
 
+            String sessionId = generateMD5.getMd5(c.getDeviceId() + c.getPhone());
+            sessionConcurrentHashMap.put(c.getPhone() + c.getDeviceId() , sessionId);
+            checkLogin.setSessionId(sessionId);
             return gson.toJson(checkLogin);
 
         }catch (Exception e){
@@ -102,22 +105,39 @@ public class CustomerControllerImpl implements CustomerController {
     }
 
 
+    
 
     public String updateProfile(String request , HttpHeaders header) {
         logger.info("incoming reuqest update Profile : " + request);
         logger.info("incoming reuqest update Profile  : " + header);
+        logger.info("incoming request register : " + header.get("sessionId"));
+        String sessionFromHeader = header.get("sessionId").toString();
+        logger.info("sessionFromHeader : " + sessionFromHeader);
+
         try {
             Gson gson = new Gson();
-            Customer c = gson.fromJson( request , Customer.class );
-            Customer check = customerService.getCustomerByPhone(c.getCustomerPhone());
+            Member c = gson.fromJson( request , Member.class );
+            String sessionFromcche  = sessionConcurrentHashMap.getSession(c.getPhone()+ c.getDeviceId().toString());
+            logger.info("Check session : " + sessionFromcche);
+
+            Member check = memberService.getCustomerByPhone(c.getPhone());
             if (check == null) {
                 return jsonResponse.build("CP-01");
             }
 
-            check.setEmail(c.getEmail());
-            check.setAddress(c.getAddress());
-            check.setCustomerName(c.getCustomerName());
-            customerService.update(check);
+            if (sessionFromHeader == null || sessionFromHeader.isEmpty()) {
+                return jsonResponse.build("CP-04");
+            }
+
+            if (!sessionFromHeader.equals(sessionFromcche)) {
+                return jsonResponse.build("CP-04");
+            }
+
+            check.setFirstName(c.getFirstName());
+            check.setLastName(c.getLastName());
+            check.setGender(c.getGender());
+            check.setDob(c.getDob());
+            memberService.update(check);
             return jsonResponse.build("RC-00");
 
         }catch (Exception e){

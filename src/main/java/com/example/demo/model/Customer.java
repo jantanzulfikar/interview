@@ -20,6 +20,7 @@ public class Customer implements Serializable{
     Date lastLogin;
 
 
+
     public Customer(){
     }
 

@@ -1,24 +1,18 @@
 package com.example.demo.controller.impl;
 
-import com.example.demo.controller.ChatController;
 import com.example.demo.controller.PostingController;
 import com.example.demo.model.Chat;
 import com.example.demo.model.Posting;
-import com.example.demo.service.ChatService;
 import com.example.demo.service.PostingService;
 import com.example.demo.util.JsonResponse;
 import com.google.gson.Gson;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 @RestController

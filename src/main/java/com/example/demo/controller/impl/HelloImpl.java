@@ -1,9 +1,7 @@
 package com.example.demo.controller.impl;
 
 import com.example.demo.controller.Hello;
-import com.example.demo.model.Customer;
 import com.example.demo.service.CustomerService;
-import com.example.demo.util.JsonExeption;
 import com.example.demo.util.JsonResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
