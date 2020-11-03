@@ -40,7 +40,7 @@ public class MemberDaoImpl extends JdbcDaoSupport implements MemberDao{
         mem.setCreatedby(1);
         mem.setLastLogin(new java.util.Date());
 
-        String sql = "INSERT INTO m_member " + "(first_name, last_name , gender  ,bod , phone ,  email , created  = ?, updated = ?, createdby = ? , lastlogin =?  , password = ? , device_id = ?  " +
+        String sql = "INSERT INTO m_member " + "(first_name, last_name , gender  ,bod , phone ,  email , created  , updated =, createdby  , lastlogin   , password  , device_id   " +
                 ") VALUES (?,?, ?, ? , ? , ? , ? ,? ,?,? , ? , ?)";
         getJdbcTemplate().update(sql, new Object[]{
                 mem.getFirstName() , mem.getLastName() , mem.getGender() , mem.getDob() , mem.getPhone() , mem.getEmail() , mem.getCreated() , mem.getUpdated() , mem.getCreatedby(),
