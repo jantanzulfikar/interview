@@ -158,7 +158,7 @@ public class MemberControllerImpl implements MemberController {
     public String profile(String request , HttpHeaders header) {
         logger.info("incoming reuqest  Profile : " + request);
         logger.info("incoming reuqest  Profile  : " + header);
-        String sessionFromHeader = header.get("sessionId").toString().replace("[" , "" ).replace("]" , "").trim() ;
+        String sessionFromHeader = header.get("sessionId").get(0);
         logger.info("sessionFromHeader : " + sessionFromHeader);
         try {
             Gson gson = new Gson();
