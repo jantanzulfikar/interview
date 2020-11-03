@@ -16,6 +16,6 @@ public interface MemberService {
     Member getLogin(String phone);
     Member getCustomerByPhone(String phone);
     int checkCountEmail(String email);
-
+    Member getLoginByEmail(String email);
 }
 

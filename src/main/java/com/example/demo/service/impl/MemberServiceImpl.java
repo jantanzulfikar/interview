@@ -65,4 +65,9 @@ public class MemberServiceImpl implements MemberService {
     public int checkCountEmail(String emial) {
         return memberDao.getEmail(emial);
     }
+
+    @Override
+    public Member getLoginByEmail(String email ){
+        return memberDao.getLoginByEmail(email);
+    }
 }

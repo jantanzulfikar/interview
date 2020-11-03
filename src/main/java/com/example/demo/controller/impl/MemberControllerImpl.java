@@ -56,7 +56,7 @@ public class MemberControllerImpl implements MemberController {
             }
 
             int checkEmail = memberService.checkCountEmail(c.getEmail());
-            if (checkEmail > 1 ) {
+            if (checkEmail > 0 ) {
                 return jsonResponse.build("RC-02");
             }
 
@@ -79,14 +79,21 @@ public class MemberControllerImpl implements MemberController {
         try {
             Gson gson = new Gson();
             Member c = gson.fromJson( request , Member.class );
-            if (c.getFirstName() == null || c.getPassword() == null) {
+            if (c.getPhone() == null || c.getPassword() == null ) {
                 return jsonResponse.build("LG-02");
             }
 
             String hashPass = generateMD5.getMd5(c.getPassword());
             Member checkLogin = memberService.getLogin(c.getPhone());
-            if (checkLogin == null){
-               return jsonResponse.build("LG-03");
+            if (checkLogin == null) {
+                if(c.getEmail() == null) {
+                    return jsonResponse.build("LG-03");
+                }
+
+                checkLogin = memberService.getLoginByEmail(c.getEmail());
+                if (checkLogin == null) {
+                    return jsonResponse.build("LG-03");
+                }
             }
 
             if (!hashPass.equals(checkLogin.getPassword())) {

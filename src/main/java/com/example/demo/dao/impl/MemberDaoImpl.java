@@ -196,5 +196,36 @@ public class MemberDaoImpl extends JdbcDaoSupport implements MemberDao{
     }
 
 
+    @Override
+    public Member getLoginByEmail(String email) {
+        try {
+            String sql = "SELECT * FROM m_member WHERE email = ? ";
+            return (Member) getJdbcTemplate().queryForObject(sql, new Object[]{ email},  new RowMapper<Member>(){
+                @Override
+                public Member mapRow(ResultSet rs, int rwNumber) throws SQLException {
+                    Member mem = new Member();
+                    mem.setId(rs.getLong("id"));
+                    mem.setPassword(rs.getString("password"));
+                    mem.setLastName(rs.getString("last_name"));
+                    mem.setFirstName(rs.getString("first_name"));
+                    mem.setPassword(rs.getString("password"));
+                    mem.setEmail(rs.getString("email"));
+                    mem.setCreated(rs.getTimestamp("created"));
+                    mem.setUpdated(rs.getTimestamp("updated"));
+                    mem.setCreatedby(rs.getInt("createdby"));
+                    mem.setLastLogin(rs.getTimestamp("lastlogin"));
+                    mem.setPhone(rs.getString("phone"));
+                    mem.setDeviceId(rs.getString("device_id"));
+                    return mem;
+                }
+            });
+
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
+    }
+
+
 
 }

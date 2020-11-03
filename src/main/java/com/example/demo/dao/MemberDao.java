@@ -15,4 +15,5 @@ public interface MemberDao {
     Member getLogin(String phone);
     Member getCustomerByPhone(String phone);
     int getEmail(String email);
+    Member getLoginByEmail(String email);
 }
