@@ -46,8 +46,20 @@ public class ProductControllerImpl implements ProductController {
     public String allProduct(String request , HttpHeaders header) {
         logger.info("incoming reuqest  All Product : " + request);
         logger.info("incoming reuqest  All Product  : " + header);
-        String sessionFromHeader = header.get("sessionId").get(0).toString();
-        logger.info("sessionFromHeader : " + sessionFromHeader);
+        String authHeader = header.get("Authentication").get(0).toString();
+        Gson gson = new Gson();
+        Member c = gson.fromJson( request , Member.class );
+        String authCache  = sessionConcurrentHashMap.getSession(c.getPhone().substring(1 , 6) + c.getDeviceId().substring(1 , 6));
+        logger.info("Check authCache : " + authCache);
+        logger.info("AuthenticationHeader : " + authHeader);
+        if (authHeader == null || authHeader.isEmpty()) {
+            return jsonResponse.build("CP-04");
+        }
+
+        if (!authHeader.equals(authCache)) {
+            return jsonResponse.build("CP-04");
+        }
+        
         List<Product> pro = productService.getAllProduct();
         logger.info("count Data : " + pro.size());
         if (pro == null) {

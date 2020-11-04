@@ -163,7 +163,7 @@ public class MemberControllerImpl implements MemberController {
         try {
             Gson gson = new Gson();
             Member c = gson.fromJson( request , Member.class );
-            String authCache  = sessionConcurrentHashMap.getSession(c.getPhone()+ c.getDeviceId().toString());
+            String authCache  = sessionConcurrentHashMap.getSession(c.getPhone().substring(1 , 6) + c.getDeviceId().substring(1 , 6));
             logger.info("Check authCache : " + authCache);
 
             Member check = memberService.getCustomerByPhone(c.getPhone());
