@@ -77,7 +77,7 @@ public class ProductDaoImpl extends JdbcDaoSupport implements ProductDao{
 
                 logger.info("CHECK : " + pro.getId());
                 logger.info("CHECK : " + pro.getProductCode());
-                
+
 
 
                 result.add(pro);

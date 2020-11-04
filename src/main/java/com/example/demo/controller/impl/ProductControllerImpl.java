@@ -67,9 +67,10 @@ public class ProductControllerImpl implements ProductController {
         }
 
         JSONObject objData = new JSONObject();
-        Map<String , Object> result = new HashMap<String , Object>();
+
         List<Map<String, Object>> resultAll = new ArrayList<Map<String,Object>>();
         for (Product proD : pro) {
+            Map<String , Object> result = new HashMap<String , Object>();
             result.put("id", proD.getId());
             result.put("productName" , proD.getProductName());
             result.put("productCode" , proD.getProductCode());
