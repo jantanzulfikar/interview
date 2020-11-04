@@ -65,8 +65,8 @@ public class ProductDaoImpl extends JdbcDaoSupport implements ProductDao{
             String sql = "SELECT * FROM m_product order by id ";
             List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql , new Object[] {});
             List<Product> result = new ArrayList<Product>();
-            Product pro = new Product();
             for(Map<String, Object> row:rows){
+                Product pro = new Product();
                 pro.setId((Long)row.get("id"));
                 pro.setProductCode((String )row.get("product_code"));
                 pro.setPrice((BigDecimal) row.get("price"));
@@ -74,6 +74,12 @@ public class ProductDaoImpl extends JdbcDaoSupport implements ProductDao{
                 pro.setBrandName((String) row.get("brand_name"));
                 pro.setCategory((String) row.get("category"));
                 pro.setDescription((String) row.get("desciption"));
+
+                logger.info("CHECK : " + pro.getId());
+                logger.info("CHECK : " + pro.getProductCode());
+                
+
+
                 result.add(pro);
             }
 
