@@ -100,9 +100,9 @@ public class MemberControllerImpl implements MemberController {
                 return jsonResponse.build("LG-03");
             }
 
-            String sessionId = generateMD5.getMd5(c.getDeviceId() + c.getPhone());
-            sessionConcurrentHashMap.put(c.getPhone() + c.getDeviceId() , sessionId);
-            checkLogin.setSessionId(sessionId);
+            String auth = generateMD5.getMd5(c.getDeviceId() + c.getPhone());
+            sessionConcurrentHashMap.put(c.getPhone().substring(1 , 6) + c.getDeviceId().substring(1 , 6) , auth);
+            checkLogin.setAuthentication(auth);
             return gson.toJson(checkLogin);
 
         }catch (Exception e){
@@ -117,26 +117,26 @@ public class MemberControllerImpl implements MemberController {
     public String updateProfile(String request , HttpHeaders header) {
         logger.info("incoming reuqest update Profile : " + request);
         logger.info("incoming reuqest update Profile  : " + header);
-        logger.info("incoming request register : " + header.get("sessionId"));
-        String sessionFromHeader = header.get("sessionId").get(0).toString();
-        logger.info("sessionFromHeader : " + sessionFromHeader);
+        logger.info("incoming request register : " + header.get("Authentication"));
+        String authHeader = header.get("Authentication").get(0).toString();
+        logger.info("authHeader : " + authHeader);
 
         try {
             Gson gson = new Gson();
             Member c = gson.fromJson( request , Member.class );
-            String sessionFromcche  = sessionConcurrentHashMap.getSession(c.getPhone()+ c.getDeviceId().toString());
-            logger.info("Check session : " + sessionFromcche);
+            String auth  = sessionConcurrentHashMap.getSession(c.getPhone().substring(1 , 6) + c.getDeviceId().substring(1 , 6));
+            logger.info("Check Auth : " + auth);
 
             Member check = memberService.getCustomerByPhone(c.getPhone());
             if (check == null) {
                 return jsonResponse.build("CP-01");
             }
 
-            if (sessionFromHeader == null || sessionFromHeader.isEmpty()) {
+            if (authHeader == null || authHeader.isEmpty()) {
                 return jsonResponse.build("CP-05");
             }
 
-            if (!sessionFromHeader.equals(sessionFromcche)) {
+            if (!authHeader.equals(auth)) {
                 return jsonResponse.build("CP-04");
             }
 
@@ -158,24 +158,24 @@ public class MemberControllerImpl implements MemberController {
     public String profile(String request , HttpHeaders header) {
         logger.info("incoming reuqest  Profile : " + request);
         logger.info("incoming reuqest  Profile  : " + header);
-        String sessionFromHeader = header.get("sessionId").get(0).toString();
-        logger.info("sessionFromHeader : " + sessionFromHeader);
+        String authHeader = header.get("Authentication").get(0).toString();
+        logger.info("authHeader : " + authHeader);
         try {
             Gson gson = new Gson();
             Member c = gson.fromJson( request , Member.class );
-            String sessionFromcche  = sessionConcurrentHashMap.getSession(c.getPhone()+ c.getDeviceId().toString());
-            logger.info("Check session : " + sessionFromcche);
+            String authCache  = sessionConcurrentHashMap.getSession(c.getPhone()+ c.getDeviceId().toString());
+            logger.info("Check authCache : " + authCache);
 
             Member check = memberService.getCustomerByPhone(c.getPhone());
             if (check == null) {
                 return jsonResponse.build("CP-01");
             }
 
-            if (sessionFromHeader == null || sessionFromHeader.isEmpty()) {
+            if (authHeader == null || authHeader.isEmpty()) {
                 return jsonResponse.build("CP-04");
             }
 
-            if (!sessionFromHeader.equals(sessionFromcche)) {
+            if (!authHeader.equals(authCache)) {
                 return jsonResponse.build("CP-04");
             }
 

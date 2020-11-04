@@ -21,7 +21,7 @@ public class Member implements Serializable {
     Integer createdby;
     Date lastLogin;
     String password;
-    String sessionId;
+    String authentication;
     String deviceId;
 //    public Member(long id, String phone, String firstName , String lastName , String gender , Date dob , String email )     {
 //        this.id = id;
@@ -134,13 +134,6 @@ public class Member implements Serializable {
         this.password = password;
     }
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
 
     public String getDeviceId() {
         return deviceId;
@@ -148,5 +141,13 @@ public class Member implements Serializable {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getAuthentication() {
+        return authentication;
+    }
+
+    public void setAuthentication(String authentication) {
+        this.authentication = authentication;
     }
 }
